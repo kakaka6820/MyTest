@@ -1,0 +1,39 @@
+workflows:
+  iphone-ipa:
+    name: Build iPhone IPA
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    environment:
+      xcode: latest
+    scripts:
+      - name: Build device application
+        script: |
+          set -euo pipefail
+          project=$(find "$CM_BUILD_DIR" -name SequenceFilterTool.xcodeproj -type d -print -quit)
+          test -n "$project"
+          xcodebuild -version
+          xcodebuild \
+            -project "$project" \
+            -scheme SequenceFilterTool \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$TMPDIR/DerivedData" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY= \
+            DEVELOPMENT_TEAM= \
+            build
+      - name: Package unsigned IPA for local signing
+        script: |
+          set -euo pipefail
+          app="$TMPDIR/DerivedData/Build/Products/Release-iphoneos/SequenceFilterTool.app"
+          test -d "$app"
+          test -f "$app/SequenceFilterTool"
+          mkdir -p "$TMPDIR/package/Payload" "$CM_BUILD_DIR/artifacts"
+          ditto "$app" "$TMPDIR/package/Payload/SequenceFilterTool.app"
+          cd "$TMPDIR/package"
+          /usr/bin/zip -qry "$CM_BUILD_DIR/artifacts/SequenceFilterTool-unsigned.ipa" Payload
+          unzip -t "$CM_BUILD_DIR/artifacts/SequenceFilterTool-unsigned.ipa"
+    artifacts:
+      - artifacts/SequenceFilterTool-unsigned.ipa

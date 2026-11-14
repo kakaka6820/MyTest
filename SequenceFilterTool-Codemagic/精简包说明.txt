@@ -1,0 +1,25 @@
+SequenceFilterTool 精简源码包
+生成日期：2026-11-09（北京时间）
+
+保留内容
+- SequenceFilterTool/：全部现有应用源码、模型、历史数据、CSV 和图标资源，逐文件保持原样。
+- SequenceFilterToolTests/：全部现有测试。
+- SequenceFilterTool.xcodeproj/：原 Xcode 工程、共享 Scheme 和 Workspace。
+- project.yml：原 XcodeGen 工程配置。
+- DesignAssets/：图标设计源文件。
+- SPEC.md 和现有功能说明文档。
+
+使用方式
+解压后用完整 Xcode 打开 SequenceFilterTool.xcodeproj，选择 SequenceFilterTool Scheme。
+真机运行时按自己的开发者账号配置签名。以现有 .xcodeproj 为准，无需重新生成工程。
+
+精简方式
+仅从交付包排除 Analysis/（离线研究、中间数据和旧备份）、Builds/（历史 IPA）、
+output/、outputs/（历史报告、安装包和研究产物）、tmp/ 以及系统缓存。
+离线研究脚本及其重生成流程不在此包中；应用所用生成结果已保留在源码或内置资源中。
+原项目中的这些文件没有删除，现有应用代码和资源也没有修改。
+
+验证范围
+已校验 ZIP 完整性、全部保留文件的 SHA-256 一致性、Xcode 源码与资源引用完整性。
+本机未配置完整 Xcode，无法执行 iOS 编译或 XCTest；未宣称通过编译或运行测试。
+SHA256SUMS.txt 记录来自原项目的所有保留文件的校验值。
